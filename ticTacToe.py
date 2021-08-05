@@ -15,7 +15,13 @@ def playerChoice():
 	
 	choice = input('Player 1: Do you want to be X or 0?')
 	
-	return choice
+	if choice == 'X':
+		print('Player 1 will start')
+	elif choice == '0':
+		print('Player 2 will start')
+	else:
+		print("Sorry, we don't understand, type again... ")
+		playerChoice()
 
 
 #this is a function where the user can choose where to put X or 0
@@ -25,20 +31,21 @@ def positionChoice(board):
 
 	position = int(input('Choose your next position: (1, 9)'))
 
-	#replace the blank spaces with X or 0
+	#the symbol will change after a user makes a move
 	if symbol == 'X':
-		board[position] = symbol
 		symbol = '0'
 	else:
-		board[position] = symbol
 		symbol = 'X'
+
+	#replace the blank spaces with X or 0
+	board[position] = symbol
 
 	#display the board everytime a player makes a move
 	displayBoard(board)
 
 
 #this is a function that will return True if a player has won or Flase in the other case
-def playerWin(board):
+def playerWin(board, symbol):
 
 	#Check if there are verticals, horizontals or diagonals for a win
 	if (symbol == board[1] == board[2] == board[3]) or \
@@ -53,31 +60,39 @@ def playerWin(board):
 	else:
 		return False
 
-
+#This is a function that returns True if the user wants to play again or Flase otherwise
 def gameOnChoice():
 
 	choice = input('Do you want to keep playing (Y or N)? ')
 
 	return choice == 'Y'
 
-#Global variables
-board = [' '] * 10
+
 gameOn = True
 
 while gameOn:
 
-	symbol = playerChoice()
+	#the board will be cleared everytime the user wants to play again
+	board = [' '] * 10
+	board[0] = '#'
+
+	#user choose if he wants to play with "x" or "0"
+	playerChoice()
+
+	symbol = '0'
+	space = ' '
 	
-	while playerWin(board) == False or ' ' in board:
+	#keep moving positions until one of them wins or there is a tie
+	while playerWin(board, symbol) == False and space in board:
+
 		positionChoice(board)
 
-	if playerWin(board):
+	if playerWin(board, symbol):
 		print('Congratulations, you have won the game!')
-	elif ' ' not in board:
+	elif space not in board:
 		print('Tie')
 	else:
 		pass
 
+	#asking for playing again
 	gameOn = gameOnChoice()
-
-
